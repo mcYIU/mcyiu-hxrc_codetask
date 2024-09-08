@@ -4,14 +4,19 @@ public class PlayerController : MonoBehaviour
 {
     public float yThreshold;
     public float force;
+    public Transform finishZone;
     public ParticleSystem deadEffect;
     public ParticleSystem collectEffect;
 
+    private GameManager manager;
+    private Camera mainCamera;
     private Rigidbody2D rb;
     private bool canMove;
 
     void Start()
     {
+        manager = FindObjectOfType<GameManager>();
+        mainCamera = Camera.main;
         rb = GetComponent<Rigidbody2D>();
 
         canMove = true;
@@ -28,15 +33,21 @@ public class PlayerController : MonoBehaviour
                 rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
             }
 
-            // Check if ball goes above the Y threshold
-            if (transform.position.y > yThreshold)
+            // Check if the ball goes above yPos of camera with a threshold value, and the top edge of camera reaches final zone
+            if (transform.position.y > yThreshold && transform.position.y + mainCamera.orthographicSize < finishZone.position.y)
             {
-                // Camera follows the ball up
-                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, transform.position.y, Camera.main.transform.position.z);
+                // Adjust camera position
+                mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, transform.position.y, mainCamera.transform.position.z);
+            }
+            // If the ball is below the camera position
+            else if (transform.position.y < mainCamera.transform.position.y)
+            {
+                // Keep the camera at its current yPos
+                mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
             }
 
-            // Check if ball falls below the camera boundary
-            if (transform.position.y < Camera.main.ViewportToWorldPoint(new Vector3(0, 0, Camera.main.nearClipPlane)).y)
+            // Check if the ball falls below the camera boundary
+            if (transform.position.y < mainCamera.ViewportToWorldPoint(new Vector3(0, 0, mainCamera.nearClipPlane)).y)
             {
                 DestroyPlayer();
             }
@@ -51,7 +62,7 @@ public class PlayerController : MonoBehaviour
         {
             // if hitting a color switcher
             case "ColorSwitcher":
-                // Change player color to a new color
+                // Change the ball color to a new color
                 ChangePlayerColor(other.GetComponent<ColorSwitcher>().SwitchColors);
                 // Destroy color switcher
                 Destroy(other.gameObject);
@@ -61,17 +72,27 @@ public class PlayerController : MonoBehaviour
             case "Obstacle":
                 // Access the obstacle color
                 other.TryGetComponent<SpriteRenderer>(out SpriteRenderer _renderer);
-                // Compare the obstacle color to player color
+                // Compare the obstacle color to the ball color
                 if (_renderer.color != GetComponent<SpriteRenderer>().color)
-                    // Destroy player if the colors are not the same
+                    // Destroy the ball if the colors are not the same
                     DestroyPlayer();
                 break;
 
             // if hitting a collectable
             case "Collect":
+                // increment the number of collected stars
                 GameManager.NumCollectedStars++;
+                // Instantiate the effect at the transform of the hit collectable 
                 Instantiate(collectEffect, other.transform.position, Quaternion.identity);
+                // Destroy the collectable
                 Destroy(other.gameObject);
+                break;
+
+            // if hitting the finish zone
+            case "Finish":
+                // Trigger winning UI
+                manager.DisplayWinStatement();
+                DestroyPlayer();
                 break;
         }
     }
@@ -81,18 +102,20 @@ public class PlayerController : MonoBehaviour
         // Randomly get a color from the colors array
         Color _color = _newColors[Random.Range(0,_newColors.Length)];
 
-        // Compare the current player color to the new color
+        // Compare the current ball color to the new color
         if (_color != GetComponent<SpriteRenderer>().color)
             // Change player color
             GetComponent<SpriteRenderer>().color = _color;
         else
-            // Get a new player color again
+            // Get a new ball color again
             ChangePlayerColor(_newColors);
     }
 
     private void DestroyPlayer()
     {
-        Instantiate(deadEffect, transform.position, Quaternion.identity);        
+        // Instantiate the effect at the ball's transform
+        Instantiate(deadEffect, transform.position, Quaternion.identity);  
+        // Destroy the ball
         Destroy(gameObject);
 
         canMove = false;
