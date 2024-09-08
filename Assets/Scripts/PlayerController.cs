@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
     public float yThreshold;
     public float force;
     public ParticleSystem deadEffect;
+    public ParticleSystem collectEffect;
 
     private Rigidbody2D rb;
     private bool canMove;
@@ -69,6 +70,8 @@ public class PlayerController : MonoBehaviour
             // if hitting a collectable
             case "Collect":
                 GameManager.NumCollectedStars++;
+                Instantiate(collectEffect, other.transform.position, Quaternion.identity);
+                Destroy(other.gameObject);
                 break;
         }
     }
