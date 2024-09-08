@@ -362,8 +362,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 343948148}
-  - component: {fileID: 343948147}
   - component: {fileID: 343948146}
+  - component: {fileID: 343948147}
   m_Layer: 0
   m_Name: Obstacle_Circle
   m_TagString: Untagged
@@ -405,7 +405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFirstObstacle: 0
-  lastColorSwitcher: {fileID: 0}
+  lastColorSwitcher: {fileID: 1053792043}
 --- !u!4 &343948148
 Transform:
   m_ObjectHideFlags: 0
@@ -1403,6 +1403,53 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1512038818
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1512038820}
+  - component: {fileID: 1512038819}
+  m_Layer: 0
+  m_Name: ObstacleSpawner_Blade
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1512038819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512038818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eb65ad99ed38ea4ca75613d51d423f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstaclePrefab: {fileID: 6031509460500047570, guid: 66907eea2bf7421459d6501a925ef404, type: 3}
+  spawnInterval: 1
+  obstacleMoveSpeed: 2
+--- !u!4 &1512038820
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512038818}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1658944503
 GameObject:
   m_ObjectHideFlags: 0
@@ -1800,3 +1847,4 @@ SceneRoots:
   - {fileID: 626659046}
   - {fileID: 343948148}
   - {fileID: 374779174}
+  - {fileID: 1512038820}
