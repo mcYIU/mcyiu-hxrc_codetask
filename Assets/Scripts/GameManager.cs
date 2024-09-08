@@ -1,33 +1,62 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public PlayerController player;
+    [Header("Colors Selection")]
     public Color[] availableColors;
 
-    private static int _numCollectedStars = 0;
+    [Header("UI")]
+    public TextMeshProUGUI text_NumCollectedStars;
+    public GameObject winPage;
+    public GameObject losePage;
 
+    private static int numCollectedStars = 0;
     public static int NumCollectedStars
     {
-        get { return _numCollectedStars; }
+        get { return numCollectedStars; }
         set
         {
-            if (_numCollectedStars != value)
+            if (numCollectedStars != value)
             {
-                _numCollectedStars = value;
+                numCollectedStars = value;
                 // Load every time the static num changes
                 LoadNumCollectedStars();
             }
         }
     }
 
-    public static void LoadNumCollectedStars()
+    private void Start()
     {
-        Debug.Log(_numCollectedStars);
+        // Reset variables as Start
+        NumCollectedStars = 0;
+        winPage.SetActive(false);
+        losePage.SetActive(false);
+
+        // Enable the player ball's movement
+        PlayerController.canMove = true;
     }
 
-    public void DisplayWinStatement()
+    private static void LoadNumCollectedStars()
     {
+        // Update the TextMeshPro component with the new value of NumCollectedStars
+        FindObjectOfType<GameManager>().text_NumCollectedStars.text = numCollectedStars.ToString();
+    }
 
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void OnEndPageEnable(string _hitTag)
+    {
+        // if the ball hits the finish zone
+        if (_hitTag == "Finish")
+            // player wins
+            winPage.SetActive(true);
+        else 
+            // player loses
+            losePage.SetActive(true);
     }
 }
