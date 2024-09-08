@@ -4,8 +4,7 @@ using UnityEngine;
 public class Obstacle : MonoBehaviour
 {
     public bool isFirstObstacle;
-
-    [HideInInspector] public ColorSwitcher lastColorSwitcher;
+    public ColorSwitcher[] lastColorSwitchers;
 
     private GameManager manager;
     private Color[] initialColors;
@@ -73,14 +72,23 @@ public class Obstacle : MonoBehaviour
             // Put the color value into the local colors array
             obstacleColors[i] = transform.GetChild(i).GetComponent<SpriteRenderer>().color;
         }
+        
+        SetColorSwitcher(lastColorSwitchers);
+    }
 
-        // Set the colors of this obstacle available at the below color switcher
-        if(!isFirstObstacle) lastColorSwitcher.SetColors(obstacleColors);
+    private void SetColorSwitcher(ColorSwitcher[] _switchers)
+    {
+        if (_switchers.Length > 0 && obstacleColors.Length > 0)
+        {
+            // Set the colors of this obstacle available at the below color switchers
+            foreach (ColorSwitcher _switcher in _switchers)
+                _switcher.SetColors(obstacleColors);
+        }
     }
 }
 
 // Custom editor class for Obstacle script
-[CustomEditor(typeof(Obstacle))]
+/*[CustomEditor(typeof(Obstacle))]
 public class Obstacle_Editor : Editor
 {
     public override void OnInspectorGUI()
@@ -95,4 +103,4 @@ public class Obstacle_Editor : Editor
         // Display an ObjectField for assigning the last Color Switcher if this is not the first obstacle 
         _script.lastColorSwitcher = EditorGUILayout.ObjectField(label: "Last Color Switcher", _script.lastColorSwitcher, typeof(ColorSwitcher), allowSceneObjects:true) as ColorSwitcher;
     }
-}
+}*/
