@@ -696,6 +696,7 @@ MonoBehaviour:
   yThreshold: 1
   force: 8
   deadEffect: {fileID: 294540363837302880, guid: a50a861cc6f7aa048adac63bdfc78f0e, type: 3}
+  collectEffect: {fileID: 294540363837302880, guid: 53ecc67773781ea45ad47e42acf7361a, type: 3}
 --- !u!1001 &525047656
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -769,7 +770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &542308378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -854,7 +855,7 @@ MonoBehaviour:
   isFirstObstacle: 0
   lastColorSwitchers:
   - {fileID: 1053792043}
-  - {fileID: 0}
+  - {fileID: 917093560}
 --- !u!95 &626659048
 Animator:
   serializedVersion: 5
@@ -1416,6 +1417,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &917093560 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8435526911774514388, guid: fe00a4584e37b0e4589e9b832711a44e, type: 3}
+  m_PrefabInstance: {fileID: 525047656}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 272b1191599475341b18be47a667fe6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1017103730
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1511,7 +1523,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1512038819
 MonoBehaviour:
   m_ObjectHideFlags: 0
