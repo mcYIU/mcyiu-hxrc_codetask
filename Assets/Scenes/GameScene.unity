@@ -383,7 +383,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 446624186}
-  firstObstacle: {fileID: 626659047}
   availableColors:
   - {r: 1, g: 0.38431376, b: 0, a: 1}
   - {r: 0, g: 1, b: 0.9803922, a: 1}
@@ -614,6 +613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastColorSwitcher: {fileID: 1053792043}
+  isFirstObstacle: 1
 --- !u!1 &642903470
 GameObject:
   m_ObjectHideFlags: 0
@@ -1159,7 +1159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272b1191599475341b18be47a667fe6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  changableColors: []
 --- !u!95 &1053792044
 Animator:
   serializedVersion: 5

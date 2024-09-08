@@ -1,8 +1,11 @@
+using UnityEditor;
 using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    public ColorSwitcher lastColorSwitcher;
+    public bool isFirstObstacle;
+
+    [HideInInspector] public ColorSwitcher lastColorSwitcher;
 
     private GameManager manager;
     private Color[] initialColors;
@@ -15,13 +18,18 @@ public class Obstacle : MonoBehaviour
         ShuffleColorsArray();
 
         AssignColorsToChildren();
+
+        // Manage the initial player color if this is the first obstacle
+        if (isFirstObstacle) 
+            SetInitialPlayerColor(manager.player);
     }
 
-    public void SetInitialPlayerColor(PlayerController _player)
+    private void SetInitialPlayerColor(PlayerController _player)
     {
-        // Set the initial color of player as the first value in the colors array
+        // Set the initial color of player from the obstacle colors array
         // To avoid that player's color does not match any color at the first obstacle 
-        if (_player != null) _player.ChangePlayerColor(obstacleColors);
+        if (_player != null) 
+            _player.ChangePlayerColor(obstacleColors);
     }
 
     private void ShuffleColorsArray()
@@ -67,6 +75,24 @@ public class Obstacle : MonoBehaviour
         }
 
         // Set the colors of this obstacle available at the below color switcher
-        lastColorSwitcher.SetColors(obstacleColors);
+        if(!isFirstObstacle) lastColorSwitcher.SetColors(obstacleColors);
+    }
+}
+
+// Custom editor class for Obstacle script
+[CustomEditor(typeof(Obstacle))]
+public class Obstacle_Editor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        var _script = (Obstacle)target;
+        // Display a toggle field for checking if this is the first obstacle
+        _script.isFirstObstacle = EditorGUILayout.Toggle(label: "isFirstObstacle", _script.isFirstObstacle);
+
+        if (_script.isFirstObstacle == true)
+            return;
+
+        // Display an ObjectField for assigning the last Color Switcher if this is not the first obstacle 
+        _script.lastColorSwitcher = EditorGUILayout.ObjectField(label: "Last Color Switcher", _script.lastColorSwitcher, typeof(ColorSwitcher), allowSceneObjects:true) as ColorSwitcher;
     }
 }

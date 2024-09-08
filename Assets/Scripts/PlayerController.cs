@@ -2,13 +2,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("ColorSwitcher"))
         {
             // Change player color to a new color
-            ChangePlayerColor(other.GetComponent<ColorSwitcher>().changableColors);
+            ChangePlayerColor(other.GetComponent<ColorSwitcher>().SwitchColors);
             // Destroy color switcher
             Destroy(other.gameObject);
         }

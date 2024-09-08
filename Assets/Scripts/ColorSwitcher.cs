@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class ColorSwitcher : MonoBehaviour
 {
-    public Color[] changableColors;
+    private Color[] selectedColors;
+
+    public Color[] SwitchColors { get { return selectedColors; } }
 
     public void SetColors(Color[] _colors)
     {
-        changableColors = _colors;
+        selectedColors = _colors;
     }
 }
