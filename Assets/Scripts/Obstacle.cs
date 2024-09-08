@@ -20,7 +20,7 @@ public class Obstacle : MonoBehaviour
 
         // Manage the initial player color if this is the first obstacle
         if (isFirstObstacle) 
-            SetInitialPlayerColor(manager.player);
+            SetInitialPlayerColor(FindObjectOfType<PlayerController>());
     }
 
     private void SetInitialPlayerColor(PlayerController _player)

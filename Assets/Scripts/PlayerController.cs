@@ -8,10 +8,11 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem deadEffect;
     public ParticleSystem collectEffect;
 
+    public static bool canMove;
+
     private GameManager manager;
     private Camera mainCamera;
     private Rigidbody2D rb;
-    private bool canMove;
 
     void Start()
     {
@@ -33,8 +34,8 @@ public class PlayerController : MonoBehaviour
                 rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
             }
 
-            // Check if the ball goes above yPos of camera with a threshold value, and the top edge of camera reaches final zone
-            if (transform.position.y > yThreshold && transform.position.y + mainCamera.orthographicSize < finishZone.position.y)
+            // Check if the ball goes above yPos of camera, and the top edge of camera reaches final zone
+            if (transform.position.y > mainCamera.transform.position.y && transform.position.y + mainCamera.orthographicSize < finishZone.position.y)
             {
                 // Adjust camera position
                 mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, transform.position.y, mainCamera.transform.position.z);
@@ -49,7 +50,7 @@ public class PlayerController : MonoBehaviour
             // Check if the ball falls below the camera boundary
             if (transform.position.y < mainCamera.ViewportToWorldPoint(new Vector3(0, 0, mainCamera.nearClipPlane)).y)
             {
-                DestroyPlayer();
+                DestroyPlayer(false);
             }
         }
     }
@@ -75,7 +76,7 @@ public class PlayerController : MonoBehaviour
                 // Compare the obstacle color to the ball color
                 if (_renderer.color != GetComponent<SpriteRenderer>().color)
                     // Destroy the ball if the colors are not the same
-                    DestroyPlayer();
+                    DestroyPlayer(false);
                 break;
 
             // if hitting a collectable
@@ -91,8 +92,12 @@ public class PlayerController : MonoBehaviour
             // if hitting the finish zone
             case "Finish":
                 // Trigger winning UI
-                manager.DisplayWinStatement();
-                DestroyPlayer();
+                manager.OnEndPageEnable(_tag);
+                DestroyPlayer(true);
+                break;
+
+            case null:
+                DestroyPlayer(false);
                 break;
         }
     }
@@ -100,7 +105,7 @@ public class PlayerController : MonoBehaviour
     public void ChangePlayerColor(Color[] _newColors)
     {
         // Randomly get a color from the colors array
-        Color _color = _newColors[Random.Range(0,_newColors.Length)];
+        Color _color = _newColors[Random.Range(0, _newColors.Length)];
 
         // Compare the current ball color to the new color
         if (_color != GetComponent<SpriteRenderer>().color)
@@ -111,13 +116,17 @@ public class PlayerController : MonoBehaviour
             ChangePlayerColor(_newColors);
     }
 
-    private void DestroyPlayer()
+    private void DestroyPlayer(bool _doesPlayerWin)
     {
         // Instantiate the effect at the ball's transform
-        Instantiate(deadEffect, transform.position, Quaternion.identity);  
+        Instantiate(deadEffect, transform.position, Quaternion.identity);
         // Destroy the ball
         Destroy(gameObject);
 
         canMove = false;
+
+        // Call lose page if the ball is killed out of finish zone
+        if (!_doesPlayerWin)
+            manager.OnEndPageEnable("");
     }
 }
