@@ -239,7 +239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFirstObstacle: 0
-  lastColorSwitcher: {fileID: 0}
+  lastColorSwitchers: []
 --- !u!1 &7459613714526414294
 GameObject:
   m_ObjectHideFlags: 0

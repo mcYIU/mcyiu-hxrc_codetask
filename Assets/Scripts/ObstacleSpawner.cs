@@ -4,6 +4,7 @@ using UnityEngine;
 public class ObstacleSpawner : MonoBehaviour
 {
     public GameObject obstaclePrefab;
+    public ColorSwitcher[] lastColorSwitchers;
     public float spawnInterval;
     public float obstacleMoveSpeed;
 
@@ -26,6 +27,11 @@ public class ObstacleSpawner : MonoBehaviour
     {
         // Instantiate a new obstacle at the spawner's position
         GameObject _newPrefab = Instantiate(obstaclePrefab, transform.position, Quaternion.identity);
+
+        // Set the colors of this obstacle available at the below color switchers
+        _newPrefab.TryGetComponent<Obstacle>(out Obstacle _obstacle);
+        _obstacle.lastColorSwitchers = lastColorSwitchers;
+
         // Start moving the obstacle
         StartCoroutine(MoveObstacle(_newPrefab));
     }
