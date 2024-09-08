@@ -9,6 +9,7 @@ TagManager:
   - Point
   - ColorSwitcherTre
   - Obstacle
+  - Collect
   layers:
   - Default
   - TransparentFX

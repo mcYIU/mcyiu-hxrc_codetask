@@ -7,11 +7,13 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem deadEffect;
 
     private Rigidbody2D rb;
-    private bool canMove = true;
+    private bool canMove;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        canMove = true;
     }
 
     void Update()
@@ -46,6 +48,7 @@ public class PlayerController : MonoBehaviour
 
         switch (_tag)
         {
+            // if hitting a color switcher
             case "ColorSwitcher":
                 // Change player color to a new color
                 ChangePlayerColor(other.GetComponent<ColorSwitcher>().SwitchColors);
@@ -53,10 +56,19 @@ public class PlayerController : MonoBehaviour
                 Destroy(other.gameObject);
                 break;
 
+            // if hitting an obstacle
             case "Obstacle":
+                // Access the obstacle color
                 other.TryGetComponent<SpriteRenderer>(out SpriteRenderer _renderer);
+                // Compare the obstacle color to player color
                 if (_renderer.color != GetComponent<SpriteRenderer>().color)
+                    // Destroy player if the colors are not the same
                     DestroyPlayer();
+                break;
+
+            // if hitting a collectable
+            case "Collect":
+                GameManager.NumCollectedStars++;
                 break;
         }
     }
