@@ -25,4 +25,9 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log(_numCollectedStars);
     }
+
+    public void DisplayWinStatement()
+    {
+
+    }
 }
