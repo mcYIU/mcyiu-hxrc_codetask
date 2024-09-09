@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public GameObject winPage;
     public GameObject losePage;
 
+    private SoundManager soundManager;
     private static int numCollectedStars = 0;
     public static int NumCollectedStars
     {
@@ -29,6 +30,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        soundManager = FindAnyObjectByType<SoundManager>();
+
         // Reset variables as Start
         NumCollectedStars = 0;
         winPage.SetActive(false);
@@ -53,10 +56,16 @@ public class GameManager : MonoBehaviour
     {
         // if the ball hits the finish zone
         if (_hitTag == "Finish")
-            // player wins
+        {
+            // Trigger win sound and win page
+            soundManager.PlayCollectSound();
             winPage.SetActive(true);
-        else 
-            // player loses
+        }
+        else
+        {
+            // Trigger lose sound and lose page
+            soundManager.PlayDeadSound();
             losePage.SetActive(true);
+        }
     }
 }
