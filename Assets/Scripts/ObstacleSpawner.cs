@@ -10,6 +10,14 @@ public class ObstacleSpawner : MonoBehaviour
 
     private float spawnTimer = 0.0f;
 
+    private void Start()
+    {
+        // Find the position of right edge of the screen
+        Vector3 screenRightEdge = Camera.main.ViewportToWorldPoint(new Vector3(1, 0.5f, 10)); 
+        // Make this spawner always at the right edge
+        transform.position = new Vector3(screenRightEdge.x, transform.position.y, transform.position.z);
+    }
+
     void Update()
     {
         spawnTimer += Time.deltaTime;
