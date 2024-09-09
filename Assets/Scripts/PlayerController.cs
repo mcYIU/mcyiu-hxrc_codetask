@@ -10,13 +10,15 @@ public class PlayerController : MonoBehaviour
 
     public static bool canMove;
 
-    private GameManager manager;
+    private GameManager gameManager;
+    private SoundManager soundManager;
     private Camera mainCamera;
     private Rigidbody2D rb;
 
     void Start()
     {
-        manager = FindObjectOfType<GameManager>();
+        gameManager = FindObjectOfType<GameManager>();
+        soundManager = FindObjectOfType<SoundManager>();
         mainCamera = Camera.main;
         rb = GetComponent<Rigidbody2D>();
 
@@ -32,6 +34,8 @@ public class PlayerController : MonoBehaviour
                 // Handle player input
                 // Add force to the ball in the Y axis
                 rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+                // Play sound effect in every click
+                soundManager.PlayClickSound();
             }
 
             // Check if the ball goes above yPos of camera, and the top edge of camera reaches final zone
@@ -50,7 +54,8 @@ public class PlayerController : MonoBehaviour
             // Check if the ball falls below the camera boundary
             if (transform.position.y < mainCamera.ViewportToWorldPoint(new Vector3(0, 0, mainCamera.nearClipPlane)).y)
             {
-                DestroyPlayer(false);
+                DestroyPlayer();
+                // Play the sound effect same as hitting obstacle  
             }
         }
     }
@@ -65,8 +70,9 @@ public class PlayerController : MonoBehaviour
             case "ColorSwitcher":
                 // Change the ball color to a new color
                 ChangePlayerColor(other.GetComponent<ColorSwitcher>().SwitchColors);
-                // Destroy color switcher
+                // Destroy color switcher and play color switch sound
                 Destroy(other.gameObject);
+                soundManager.PlayColorSwitchSound();
                 break;
 
             // if hitting an obstacle
@@ -76,7 +82,7 @@ public class PlayerController : MonoBehaviour
                 // Compare the obstacle color to the ball color
                 if (_renderer.color != GetComponent<SpriteRenderer>().color)
                     // Destroy the ball if the colors are not the same
-                    DestroyPlayer(false);
+                    DestroyPlayer();
                 break;
 
             // if hitting a collectable
@@ -85,19 +91,20 @@ public class PlayerController : MonoBehaviour
                 GameManager.NumCollectedStars++;
                 // Instantiate the effect at the transform of the hit collectable 
                 Instantiate(collectEffect, other.transform.position, Quaternion.identity);
-                // Destroy the collectable
+                // Destroy the collectable and play collect sound
                 Destroy(other.gameObject);
+                soundManager.PlayCollectSound();
                 break;
 
             // if hitting the finish zone
             case "Finish":
                 // Trigger winning UI
-                manager.OnEndPageEnable(_tag);
-                DestroyPlayer(true);
+                gameManager.OnEndPageEnable(_tag);
+                // Destroy the ball without particles and sound
+                Destroy(gameObject);
                 break;
 
-            case null:
-                DestroyPlayer(false);
+            default:
                 break;
         }
     }
@@ -116,7 +123,7 @@ public class PlayerController : MonoBehaviour
             ChangePlayerColor(_newColors);
     }
 
-    private void DestroyPlayer(bool _doesPlayerWin)
+    private void DestroyPlayer()
     {
         // Instantiate the effect at the ball's transform
         Instantiate(deadEffect, transform.position, Quaternion.identity);
@@ -125,8 +132,7 @@ public class PlayerController : MonoBehaviour
 
         canMove = false;
 
-        // Call lose page if the ball is killed out of finish zone
-        if (!_doesPlayerWin)
-            manager.OnEndPageEnable("");
+        // Call lose page when the ball is killed
+        gameManager.OnEndPageEnable("");
     }
 }
